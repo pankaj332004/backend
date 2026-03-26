@@ -3,8 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { use } from "react";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
 const generateAccessAndRefreshTokens = async function(userId) {
     try{
@@ -159,7 +158,7 @@ const refreshAccessToken = asyncHandler(async(req,res)=>{
     const incomingRefreshToken = req.cookies.refreshToken
     || req.body.refreshToken
 
-    if(incomingRefreshToken) {
+    if(!incomingRefreshToken) {
         throw new ApiError(401,"unauthorized request")
     }
 
@@ -184,7 +183,7 @@ const refreshAccessToken = asyncHandler(async(req,res)=>{
             secure: true
         }
     
-        const {accessToken, newRefreshToken} = await generateAccessAndRefreshTokens(user._id)
+        const {accessToken, refreshToken: newRefreshToken} = await generateAccessAndRefreshTokens(user._id)
     
         return res
         .status(200)
