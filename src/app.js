@@ -15,9 +15,20 @@ app.use(cookieParser());
 
 // routes
 import userRoutes from "./routes/user.routes.js";
+import videoRoutes from "./routes/video.routes.js";
+import commentRoutes from "./routes/comment.routes.js";
+import likeRoutes from "./routes/like.routes.js";
+import playlistRoutes from "./routes/playlist.routes.js";
+import subscriptionRoutes from "./routes/subscription.routes.js";
+import tweetRoutes from "./routes/tweet.routes.js";
 
-// routes delcaration
+// routes declaration
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/videos", videoRoutes);
+app.use("/api/v1/comments", commentRoutes);
+app.use("/api/v1/likes", likeRoutes);
+app.use("/api/v1/playlists", playlistRoutes);
+app.use("/api/v1/subscriptions", subscriptionRoutes);
+app.use("/api/v1/tweets", tweetRoutes);
 
-// http://localhost:8000/api/v1/user/register
 export { app };
