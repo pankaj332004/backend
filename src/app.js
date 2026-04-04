@@ -31,4 +31,14 @@ app.use("/api/v1/playlists", playlistRoutes);
 app.use("/api/v1/subscriptions", subscriptionRoutes);
 app.use("/api/v1/tweets", tweetRoutes);
 
+// global error handling middleware
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    res.status(statusCode).json({
+        success: false,
+        message: err.message || "Something went wrong",
+        errors: err.errors || [],
+    });
+});
+
 export { app };

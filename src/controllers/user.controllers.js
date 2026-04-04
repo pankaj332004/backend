@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.models.js";
@@ -93,8 +94,12 @@ const loginUser = asyncHandler(async (req,res)=>{
     // return access token and refresh token to frontend
     const {email , username , password} = req.body;
 
-    if([email , username , password].some(field => field?.trim() === "")){
-        throw new ApiError(400, "All fields are required");
+    if(!email && !username){
+        throw new ApiError(400, "Email or username is required");
+    }
+
+    if(!password){
+        throw new ApiError(400, "Password is required");
     }
 
     const user = await User.findOne({
@@ -132,8 +137,8 @@ const logoutUser = asyncHandler(async (req,res)=>{
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set : {
-                refreshToken: undefined
+            $unset : {
+                refreshToken: 1
             }
         },
         {
@@ -271,7 +276,7 @@ const updateUserAvatar = asyncHandler(async(req,res)=>{
     return res
     .status(200)
     .json(
-        200 , user , "Avatar uploaded successfully"
+        new ApiResponse(200, user, "Avatar uploaded successfully")
     )
 })
 
@@ -301,7 +306,7 @@ const updateUserCoverImage = asyncHandler(async(req,res)=>{
     return res
     .status(200)
     .json(
-        200 , user , "Cover Image uploaded successfully"
+        new ApiResponse(200, user, "Cover Image uploaded successfully")
     )
 })
 
@@ -410,7 +415,7 @@ const getWatchHistory = asyncHandler(async(req,res)=>{
                     {
                         $addFields: {
                             owner: {
-                                $first: "owner"
+                                $first: "$owner"
                             }
                         }
                     }
